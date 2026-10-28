@@ -31,8 +31,8 @@ OAuth flows, in turn, are designed for HTTP-based transports where the MCP serve
 Let's walk through what happens when a client wants to connect to your protected MCP server:
 
 <Steps>
-<Step title="Initial Handshake">
-When your MCP client first tries to connect, your server responds with a `401 Unauthorized` and tells the client where to find authorization information, captured in a [Protected Resource Metadata (PRM) document](https://datatracker.ietf.org/doc/html/rfc9728). The document is hosted by the MCP server, follows a predictable path pattern, and is provided to the client in the `resource_metadata` parameter within the `WWW-Authenticate` header.
+<Step title="Authorization Challenge">
+When an MCP client sends an unauthenticated request, your server responds with a `401 Unauthorized` and tells the client where to find authorization information, captured in a [Protected Resource Metadata (PRM) document](https://datatracker.ietf.org/doc/html/rfc9728). The document is hosted by the MCP server, follows a predictable path pattern, and is provided to the client in the `resource_metadata` parameter within the `WWW-Authenticate` header.
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -123,9 +123,15 @@ The access token is what the client will use to authenticate requests to the MCP
 Finally, the client can make requests to your MCP server using the access token embedded in the `Authorization` header:
 
 ```http
-GET /mcp HTTP/1.1
+POST /mcp HTTP/1.1
 Host: your-server.com
-Authorization: Bearer eyJhbGciOiJSUzI1NiIs...
+Authorization: Bearer <access-token>
+Content-Type: application/json
+Accept: application/json, text/event-stream
+MCP-Protocol-Version: 2026-07-28
+Mcp-Method: tools/list
+
+{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{"_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28","io.modelcontextprotocol/clientCapabilities":{}}}}
 ```
 
 The MCP server will need to validate the token and process the request if the token is valid and has the required permissions.
@@ -134,6 +140,10 @@ The MCP server will need to validate the token and process the request if the to
 </Steps>
 
 ## Implementation Example
+
+<Warning>
+The TypeScript server example below uses the legacy `initialize` handshake, `Mcp-Session-Id` sessions, and HTTP GET/DELETE session routes. It illustrates OAuth token validation with a legacy MCP transport; **it is not a 2026-07-28 Streamable HTTP implementation**. Modern servers use per-request metadata and have no protocol-level sessions. See the [2026-07-28 Streamable HTTP specification](/specification/2026-07-28/basic/transports/streamable-http) before adapting this example for a modern-only server.
+</Warning>
 
 To get started with a practical implementation, we will use a [Keycloak](https://www.keycloak.org/) authorization server hosted in a Docker container. Keycloak is an open-source authorization server that can be easily deployed locally for testing and experimentation.
 
