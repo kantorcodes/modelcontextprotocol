@@ -7,6 +7,10 @@ Authorization in the Model Context Protocol (MCP) secures access to sensitive re
 
 MCP uses standardized authorization flows to build trust between MCP clients and MCP servers. Its design doesn't focus on one specific authorization or identity system, but rather follows the conventions outlined for [OAuth 2.1](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-13). For detailed information, see the [Authorization specification](/specification/latest/basic/authorization).
 
+<Warning>
+**Protocol version of the server example:** The TypeScript implementation below uses `isInitializeRequest`, a session map, and the `Mcp-Session-Id` header. These belong to the older, session-based MCP protocol. The [2026-07-28 changelog](/specification/2026-07-28/changelog) removes the initialization handshake and protocol-level sessions. The OAuth concepts on this page still apply, but do not treat that server example as a 2026-07-28 conformance reference. For a server targeting this version, consult the [Streamable HTTP transport](/specification/2026-07-28/basic/transports/streamable-http) and [protocol versioning guidance](/specification/2026-07-28/basic/versioning).
+</Warning>
+
 ## When Should You Use Authorization?
 
 While authorization for MCP servers is **optional**, it is strongly recommended when:
