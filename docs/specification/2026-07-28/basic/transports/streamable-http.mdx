@@ -292,6 +292,16 @@ the header per [Server Validation](#server-validation).
 
 These headers are **REQUIRED** for compliance.
 
+<Note>
+
+The `Mcp-Name` entries in this table cover core protocol requests. Extensions
+can require this header for additional methods. For example, the
+[Tasks extension](/seps/2663-tasks-extension) requires `Mcp-Name` to carry
+`params.taskId` on `tasks/get`, `tasks/update`, and `tasks/cancel` requests
+sent over Streamable HTTP.
+
+</Note>
+
 If the `Mcp-Name` source value cannot be safely represented as a plain ASCII
 header value, clients **MUST** encode it using the Base64 sentinel format
 described in [Value Encoding](#value-encoding).
