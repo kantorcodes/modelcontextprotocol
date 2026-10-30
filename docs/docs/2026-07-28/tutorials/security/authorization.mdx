@@ -123,9 +123,29 @@ The access token is what the client will use to authenticate requests to the MCP
 Finally, the client can make requests to your MCP server using the access token embedded in the `Authorization` header:
 
 ```http
-GET /mcp HTTP/1.1
+POST /mcp HTTP/1.1
 Host: your-server.com
 Authorization: Bearer eyJhbGciOiJSUzI1NiIs...
+Content-Type: application/json
+Accept: application/json, text/event-stream
+MCP-Protocol-Version: 2026-07-28
+Mcp-Method: tools/list
+
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/list",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "ExampleClient",
+        "version": "1.0.0"
+      },
+      "io.modelcontextprotocol/clientCapabilities": {}
+    }
+  }
+}
 ```
 
 The MCP server will need to validate the token and process the request if the token is valid and has the required permissions.
@@ -134,6 +154,16 @@ The MCP server will need to validate the token and process the request if the to
 </Steps>
 
 ## Implementation Example
+
+<Warning>
+The TypeScript server code below still demonstrates the 2025-era Streamable HTTP
+session flow: `initialize`, `Mcp-Session-Id`, and GET/DELETE session routes.
+It does **not** implement the sessionless `2026-07-28` transport. For a new
+server, follow the [2026-07-28 Streamable HTTP specification](/specification/2026-07-28/basic/transports/streamable-http)
+and the [TypeScript SDK migration guide](https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/migration/support-2026-07-28.md)
+rather than copying the legacy session-management block. OAuth token validation
+is a separate concern from transport-version compatibility.
+</Warning>
 
 To get started with a practical implementation, we will use a [Keycloak](https://www.keycloak.org/) authorization server hosted in a Docker container. Keycloak is an open-source authorization server that can be easily deployed locally for testing and experimentation.
 
