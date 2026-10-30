@@ -25,4 +25,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+The MCP project is transitioning from MIT to Apache-2.0. New code and
+specification contributions are licensed under Apache-2.0, while documentation
+contributions (excluding specifications) are licensed under CC-BY-4.0.
+Some existing contributions remain MIT-licensed until their authors consent to
+relicensing. See [LICENSE](LICENSE) for the applicable terms.
