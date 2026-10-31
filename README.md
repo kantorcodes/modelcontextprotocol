@@ -25,4 +25,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+The project is transitioning from MIT to Apache-2.0 for code and
+specification contributions. New code and specification contributions are
+licensed under Apache-2.0; non-specification documentation contributions are
+licensed under CC-BY-4.0. Existing contributions without relicensing consent
+remain under MIT. See [LICENSE](LICENSE) for details.
