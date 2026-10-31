@@ -46,13 +46,17 @@ With the new spec version, we've officially retired the `initialize`/`initialize
 
 ```http
 POST /mcp HTTP/1.1
+Content-Type: application/json
+Accept: application/json, text/event-stream
 MCP-Protocol-Version: 2026-07-28
 Mcp-Method: tools/call
 Mcp-Name: search
 
 {"jsonrpc":"2.0","id":1,"method":"tools/call",
  "params":{"name":"search","arguments":{"q":"otters"},
- "_meta":{"io.modelcontextprotocol/clientInfo":{"name":"my-app","version":"1.0"}}}}
+ "_meta":{"io.modelcontextprotocol/protocolVersion":"2026-07-28",
+ "io.modelcontextprotocol/clientInfo":{"name":"my-app","version":"1.0"},
+ "io.modelcontextprotocol/clientCapabilities":{}}}}
 ```
 
 Dropping the protocol-level session doesn't force your application to be stateless. If your server needs to carry state across calls, mint an explicit handle from a tool and have the model pass it back as an argument. We found this works better than session state hidden in the transport - the model can see the handle and thread it between tools.
@@ -65,7 +69,7 @@ Sometimes a tool needs something from the user mid-call, such as a confirmation 
 
 ### Header-based routing
 
-Streamable HTTP requests now must include `Mcp-Method` and `Mcp-Name` ([SEP-2243](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2243)). Your gateway, rate limiter, or WAF can route and meter on those headers instead of parsing JSON bodies.
+Streamable HTTP requests now must include `Mcp-Method` on every request, and `Mcp-Name` for `tools/call`, `resources/read`, and `prompts/get` requests ([SEP-2243](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2243)). Your gateway, rate limiter, or WAF can route and meter on those headers instead of parsing JSON bodies.
 
 ### List results are cacheable
 
